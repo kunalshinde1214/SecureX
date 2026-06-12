@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import {
   Shield, Lock, Globe, Server, AlertTriangle, Database,
-  Eye, FileSearch, Radio, Terminal,
+  Eye, FileSearch, Radio, Terminal, Zap,
   ArrowRight, CheckCircle, TrendingUp, BarChart2
 } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -161,11 +161,25 @@ export default function Page() {
   const y1 = useTransform(scrollY, [0, 1000], [0, -50]);
   const y2 = useTransform(scrollY, [0, 1000], [0, 50]);
 
-  const handleStartScan = (url: string, id: string) => {
-    setScanUrl(url);
-    setScanId(id);
-    setAppState("scanning");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  const handleStartScan = async (url: string, depth: string) => {
+    try {
+      const res = await fetch("/api/audit/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url })
+      });
+      const data = await res.json();
+      if (data.scanId) {
+        setScanUrl(url);
+        setScanId(data.scanId);
+        setAppState("scanning");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        alert(data.error || "Failed to start scan");
+      }
+    } catch (e) {
+      alert("Network error");
+    }
   };
 
   const handleScanComplete = (finalReport: ScanReport) => {
@@ -253,7 +267,7 @@ export default function Page() {
 
           {/* URL Input */}
           <div style={{ maxWidth: 540, margin: "0 auto" }}>
-            <URLInput onStartScan={handleStartScan} />
+            <URLInput onSubmit={handleStartScan} />
           </div>
 
           <div style={{ marginTop: 32, display: "flex", gap: 32, justifyContent: "center", flexWrap: "wrap" }}>
