@@ -1,7 +1,13 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+
+export const viewport: Viewport = {
+  themeColor: "#0ea5e9",
+  width: "device-width",
+  initialScale: 1,
+};
 
 export const metadata: Metadata = {
   title: "SecureX — Professional Web Security Scanner",
@@ -36,7 +42,6 @@ export const metadata: Metadata = {
     site: "@securex",
   },
   robots: "index, follow",
-  themeColor: "#0ea5e9",
 };
 
 export default function RootLayout({
@@ -53,8 +58,10 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
-        <meta name="theme-color" content="#0ea5e9" />
         <link rel="canonical" href="https://securex.kunalshinde.me" />
+        
+        {/* Google AdSense Script Placeholder */}
+        <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "ca-pub-XXXXXXXXXXXXXXXX"}`} crossOrigin="anonymous"></script>
       </head>
       <body>
         <Navbar />

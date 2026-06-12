@@ -14,7 +14,7 @@ export default function AboutPage() {
           Democratizing <span className="gradient-text">Web Security</span>
         </h1>
         <p style={{ fontSize: 18, color: "var(--text-secondary)", maxWidth: 600, margin: "0 auto", lineHeight: 1.6 }}>
-          WebAudit Pro is an open-source, zero-budget security auditing platform designed to make professional-grade vulnerability scanning accessible to everyone.
+          SecureX is an open-source, zero-budget security auditing platform designed to make professional-grade vulnerability scanning accessible to everyone.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export default function AboutPage() {
 
       <div style={{ textAlign: "center", padding: "40px", background: "linear-gradient(135deg, rgba(15, 30, 53, 0.8), rgba(10, 22, 40, 0.9))", borderRadius: "var(--radius-lg)", border: "1px solid var(--border-subtle)" }}>
         <h2 style={{ fontSize: 20, fontWeight: 700, marginBottom: 12 }}>Ready to secure your application?</h2>
-        <p style={{ fontSize: 14, color: "var(--text-secondary)", marginBottom: 24 }}>Run a full 15-domain security audit in under 60 seconds.</p>
+        <p style={{ fontSize: 14, color: "white", marginBottom: 24 }}>Run a full 15-domain security audit in under 60 seconds.</p>
         <a href="/" className="btn-primary" style={{ textDecoration: "none" }}>Start Free Audit</a>
       </div>
     </div>

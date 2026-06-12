@@ -14,30 +14,30 @@ export async function GET(req: NextRequest) {
       where.email = { contains: search };
     }
 
-    let users = await prisma.userAccount.findMany({
+    let users = await prisma.user.findMany({
       where,
       orderBy: { createdAt: "desc" }
     });
 
     // Populate mock users if empty for the dashboard experience
     if (users.length === 0 && !search) {
-      await prisma.userAccount.createMany({
+      await prisma.user.createMany({
         data: [
-          { email: "admin@webauditpro.com", role: "ADMIN", status: "ACTIVE" },
-          { email: "john.doe@company.io", role: "SUBSCRIBER", status: "ACTIVE" },
-          { email: "jane.smith@freelance.org", role: "FREE", status: "ACTIVE" },
-          { email: "abusive.scanner@spam.net", role: "FREE", status: "SUSPENDED" },
+          { email: "admin@webauditpro.com", role: "ADMIN" },
+          { email: "john.doe@company.io", role: "USER" },
+          { email: "jane.smith@freelance.org", role: "USER" },
+          { email: "abusive.scanner@spam.net", role: "USER" },
         ]
       });
-      users = await prisma.userAccount.findMany({ orderBy: { createdAt: "desc" } });
+      users = await prisma.user.findMany({ orderBy: { createdAt: "desc" } });
     }
 
     // CSV export
     if (format === "csv") {
       const rows = [
-        ["ID", "Email", "Role", "Status", "Created"].join(","),
+        ["ID", "Email", "Role", "Created"].join(","),
         ...users.map((u) =>
-          [u.id, `"${u.email}"`, u.role, u.status, new Date(u.createdAt).toLocaleDateString()].join(",")
+          [u.id, `"${u.email}"`, u.role, new Date(u.createdAt).toLocaleDateString()].join(",")
         ),
       ].join("\n");
 
@@ -64,11 +64,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
-    const user = await prisma.userAccount.create({
+    const user = await prisma.user.create({
       data: {
         email,
-        role: role || "FREE",
-        status: "ACTIVE",
+        role: role || "USER",
       }
     });
 
@@ -85,23 +84,21 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const body = await req.json();
-    const { id, role, status } = body;
+    const { id, role } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Missing user ID" }, { status: 400 });
     }
 
-    const user = await prisma.userAccount.update({
+    const user = await prisma.user.update({
       where: { id },
       data: {
         ...(role && { role }),
-        ...(status && { status }),
-        lastActivity: new Date(),
       }
     });
 
     await prisma.adminActionLog.create({
-      data: { action: "UPDATE_USER", detail: `Updated user ${id}: role=${role}, status=${status}` }
+      data: { action: "UPDATE_USER", detail: `Updated user ${id}: role=${role}` }
     });
 
     return NextResponse.json(user);
@@ -116,7 +113,7 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
 
-    const user = await prisma.userAccount.delete({ where: { id } });
+    const user = await prisma.user.delete({ where: { id } });
 
     await prisma.adminActionLog.create({
       data: { action: "DELETE_USER", detail: `Deleted user ${user.email}` }

@@ -11,6 +11,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { URLInput } from "@/components/URLInput";
 import { ScanProgress } from "@/components/ScanProgress";
 import { AuditReport } from "@/components/AuditReport";
+import { GoogleAdBanner } from "@/components/GoogleAdBanner";
 import { ScanReport } from "@/types/audit";
 
 type AppState = "home" | "scanning" | "report";
@@ -251,11 +252,15 @@ export default function Page() {
             Run an instant, boardroom-ready security sweep combining 13 live APIs to detect vulnerabilities before hackers do. No signups, no wait.
           </p>
 
-          {/* URL Input */}
-          <div style={{ maxWidth: 540, margin: "0 auto" }}>
+          {/* Search Input */}
+          <div style={{ position: "relative", zIndex: 10 }}>
             <URLInput onSubmit={handleStartScan} />
           </div>
 
+          {/* Ad Banner */}
+          <GoogleAdBanner />
+
+          {/* Floating Features */}
           <div style={{ marginTop: 32, display: "flex", gap: 32, justifyContent: "center", flexWrap: "wrap" }}>
             {[
               { t: "100% Free Audit", c: "#10b981" },

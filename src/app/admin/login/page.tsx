@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ShieldAlert, Lock, Mail, AlertTriangle, Eye, EyeOff, Key } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -28,20 +29,18 @@ export default function AdminLoginPage() {
     setLoading(true);
     setSsoProvider("");
 
-    // Dynamic timeout simulated check
-    setTimeout(() => {
-      // Default open-source credentials
-      const DEFAULT_ADMIN = "admin@securex.kunalshinde.me";
-      const DEFAULT_PASS = "adminpassword";
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
 
-      if (email === DEFAULT_ADMIN && password === DEFAULT_PASS) {
-        localStorage.setItem("admin_auth", "true");
-        router.push("/admin");
-      } else {
-        setError("Invalid email credentials or security access code.");
-        setLoading(false);
-      }
-    }, 800);
+    if (result?.error) {
+      setError("Invalid email credentials or security access code.");
+      setLoading(false);
+    } else {
+      router.push("/admin");
+    }
   };
 
   const handleSSOLogin = (provider: string) => {
@@ -79,67 +78,29 @@ export default function AdminLoginPage() {
           overflow: "hidden",
         }}
       >
-        {/* Glow Element */}
-        <div
-          style={{
-            position: "absolute",
-            top: -100,
-            left: -100,
-            width: 250,
-            height: 250,
-            borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(0, 163, 255, 0.15) 0%, transparent 70%)",
-            pointerEvents: "none",
-          }}
-        />
-
-        {/* Brand Header */}
         <div style={{ textAlign: "center", marginBottom: 32 }}>
           <div
             style={{
               width: 54,
               height: 54,
               borderRadius: 14,
-              background: "linear-gradient(135deg, #00A3FF, #00E5FF)",
+              background: "var(--bg-base)",
+              border: "1px solid var(--border-default)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               margin: "0 auto 16px",
-              boxShadow: "0 0 20px rgba(0, 163, 255, 0.3)",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
             }}
           >
-            <ShieldAlert size={28} color="#0A0A0A" />
+            <ShieldAlert size={28} color="var(--accent-primary)" />
           </div>
-          <h1 style={{ fontSize: 24, fontWeight: 900, letterSpacing: -0.5 }}>
-            Command <span className="gradient-text">Portal</span>
+          <h1 style={{ fontSize: 24, fontWeight: 900, letterSpacing: -0.5, color: "var(--text-primary)" }}>
+            Admin Portal
           </h1>
           <p style={{ color: "var(--text-muted)", fontSize: 13, marginTop: 6 }}>
             SecureX Administration Gateway
           </p>
-        </div>
-
-        {/* Credentials alert block */}
-        <div
-          style={{
-            marginBottom: 24,
-            padding: "12px 16px",
-            background: "rgba(0, 163, 255, 0.05)",
-            border: "1px solid rgba(0, 163, 255, 0.15)",
-            borderRadius: "var(--radius-sm)",
-            fontSize: 12,
-            color: "var(--text-secondary)",
-            lineHeight: 1.5,
-            display: "flex",
-            flexDirection: "column",
-            gap: 4
-          }}
-        >
-          <div style={{ display: "flex", alignItems: "center", gap: 6, fontWeight: 700, color: "var(--accent-primary)" }}>
-            <Key size={13} />
-            Open Source Gateway Details:
-          </div>
-          <div>Email: <code style={{ fontFamily: "monospace", color: "var(--text-primary)" }}>admin@securex.kunalshinde.me</code></div>
-          <div>Code: <code style={{ fontFamily: "monospace", color: "var(--text-primary)" }}>adminpassword</code></div>
         </div>
 
         {error && (
@@ -174,11 +135,11 @@ export default function AdminLoginPage() {
               <input
                 type="email"
                 required
-                placeholder="admin@securex.kunalshinde.me"
+                placeholder="admin@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="input-field"
-                style={{ paddingLeft: 44 }}
+                style={{ paddingLeft: 44, background: "var(--bg-base)" }}
               />
               <Mail size={16} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
             </div>
@@ -197,7 +158,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field"
-                style={{ paddingLeft: 44, paddingRight: 48 }}
+                style={{ paddingLeft: 44, paddingRight: 48, background: "var(--bg-base)" }}
               />
               <Lock size={16} style={{ position: "absolute", left: 16, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)" }} />
               <button

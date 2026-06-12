@@ -19,8 +19,11 @@ const FOOTER_LINKS = {
   Security: [
     { href: "https://owasp.org", label: "OWASP", external: true },
     { href: "https://nvd.nist.gov", label: "NVD/NIST", external: true },
-    { href: "https://www.virustotal.com", label: "VirusTotal", external: true },
   ],
+  Support: [
+    { href: "https://buymeacoffee.com/kunalshinde", label: "☕ Buy me a Coffee", external: true },
+    { href: "https://kunalshinde.me", label: "Developer Portfolio", external: true },
+  ]
 };
 
 export function Footer() {
@@ -110,10 +113,10 @@ export function Footer() {
           gap: 12,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "var(--text-muted)" }}>
-          <Shield size={13} style={{ color: "#0ea5e9" }} />
-          © {year} SecureX · Built by{" "}
-          <a href="https://kunalshinde.me" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent-primary)", textDecoration: "none" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--text-primary)", fontWeight: 500 }}>
+          <Shield size={14} style={{ color: "#0ea5e9" }} />
+          © {year} SecureX · Designed & Developed <span style={{ color: "#ef4444" }}></span> by{" "}
+          <a href="https://kunalshinde.me" target="_blank" rel="noopener noreferrer" style={{ color: "var(--accent-primary)", textDecoration: "none", fontWeight: 700 }}>
             Kunal Shinde
           </a>
         </div>

@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const [totalScans, leads, users, schedules] = await Promise.all([
       prisma.scan.count(),
       prisma.lead.count(),
-      prisma.userAccount.count(),
+      prisma.user.count(),
       prisma.scheduledAudit.count({ where: { active: true } }),
     ]);
 
