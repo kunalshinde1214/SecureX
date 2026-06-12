@@ -3,9 +3,10 @@
 interface ScoreGaugeProps {
   score: number;
   size?: number;
+  lightMode?: boolean;
 }
 
-export function ScoreGauge({ score, size = 180 }: ScoreGaugeProps) {
+export function ScoreGauge({ score, size = 180, lightMode = false }: ScoreGaugeProps) {
   const strokeWidth = size * 0.08;
   const radius = (size - strokeWidth) / 2;
   const circumference = radius * 2 * Math.PI;
@@ -20,10 +21,10 @@ export function ScoreGauge({ score, size = 180 }: ScoreGaugeProps) {
   if (score < 20) { colorClass = "gauge-critical"; grade = "F"; }
 
   const gradeColor = 
-    grade.startsWith("A") ? "#34d399" :
-    grade.startsWith("B") ? "#10b981" :
-    grade.startsWith("C") ? "#fbbf24" :
-    grade.startsWith("D") ? "#f97316" : "#ef4444";
+    grade.startsWith("A") ? (lightMode ? "#059669" : "#34d399") :
+    grade.startsWith("B") ? (lightMode ? "#059669" : "#10b981") :
+    grade.startsWith("C") ? (lightMode ? "#d97706" : "#fbbf24") :
+    grade.startsWith("D") ? (lightMode ? "#ea580c" : "#f97316") : (lightMode ? "#dc2626" : "#ef4444");
 
   return (
     <div style={{ position: "relative", width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -35,7 +36,7 @@ export function ScoreGauge({ score, size = 180 }: ScoreGaugeProps) {
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke="rgba(255,255,255,0.05)"
+          stroke={lightMode ? "rgba(0,0,0,0.1)" : "rgba(255,255,255,0.05)"}
           strokeWidth={strokeWidth}
           fill="none"
         />
@@ -67,7 +68,7 @@ export function ScoreGauge({ score, size = 180 }: ScoreGaugeProps) {
           zIndex: 2,
         }}
       >
-        <div style={{ fontSize: size * 0.32, fontWeight: 900, fontFamily: "'JetBrains Mono', monospace", color: "var(--text-primary)", lineHeight: 1 }}>
+        <div style={{ fontSize: size * 0.32, fontWeight: 900, fontFamily: "'JetBrains Mono', monospace", color: lightMode ? "#0f172a" : "var(--text-primary)", lineHeight: 1 }}>
           {score}
         </div>
         <div style={{ fontSize: size * 0.08, color: gradeColor, fontWeight: 800, marginTop: size * 0.02, letterSpacing: 1 }}>
