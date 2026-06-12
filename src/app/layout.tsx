@@ -61,6 +61,7 @@ export default function RootLayout({
         <link rel="canonical" href="https://securex.kunalshinde.me" />
         
         {/* Google AdSense Script Placeholder */}
+        <meta name="google-adsense-account" content={process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "ca-pub-XXXXXXXXXXXXXXXX"} />
         <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_PUBLISHER_ID || "ca-pub-XXXXXXXXXXXXXXXX"}`} crossOrigin="anonymous"></script>
       </head>
       <body>
