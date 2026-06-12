@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Shield, Menu, X, ExternalLink, Zap } from "lucide-react";
+import Image from "next/image";
 
 const NAV_LINKS = [
   { href: "/", label: "Scanner" },
@@ -39,13 +40,13 @@ export function Navbar() {
         alignItems: "center",
         padding: "0 28px",
         background: scrolled
-          ? "rgba(6, 9, 26, 0.9)"
-          : "rgba(6, 9, 26, 0.7)",
-        borderBottom: `1px solid ${scrolled ? "rgba(14,165,233,0.12)" : "rgba(14,165,233,0.06)"}`,
+          ? "rgba(255, 255, 255, 0.9)"
+          : "rgba(255, 255, 255, 0.7)",
+        borderBottom: `1px solid ${scrolled ? "var(--border-default)" : "var(--border-subtle)"}`,
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
         transition: "all 0.3s ease",
-        boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+        boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.05)" : "none",
       }}
     >
       {/* Logo */}
@@ -59,62 +60,7 @@ export function Navbar() {
           marginRight: "auto",
         }}
       >
-        <div
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 0 16px rgba(14,165,233,0.35)",
-            flexShrink: 0,
-          }}
-        >
-          <Shield size={18} color="white" />
-        </div>
-        <div>
-          <span
-            style={{
-              fontSize: 18,
-              fontWeight: 900,
-              letterSpacing: "-0.04em",
-              fontFamily: "'Space Grotesk', sans-serif",
-              background: "linear-gradient(135deg, #e2e8f0, #94a3b8)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            Secure
-          </span>
-          <span
-            style={{
-              fontSize: 18,
-              fontWeight: 900,
-              letterSpacing: "-0.04em",
-              fontFamily: "'Space Grotesk', sans-serif",
-              background: "linear-gradient(135deg, #0ea5e9, #38bdf8)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-          >
-            X
-          </span>
-        </div>
-        <div
-          style={{
-            fontSize: 9,
-            fontWeight: 700,
-            letterSpacing: 1.5,
-            color: "var(--text-muted)",
-            textTransform: "uppercase",
-            alignSelf: "flex-end",
-            paddingBottom: 1,
-          }}
-        >
-          β
-        </div>
+        <Image src="/logo.png" alt="SecureX Logo" width={140} height={35} style={{ objectFit: "contain" }} />
       </Link>
 
       {/* Desktop Links */}

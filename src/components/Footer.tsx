@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Shield, Globe, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 
 const FOOTER_LINKS = {
   Platform: [
@@ -28,7 +29,7 @@ export function Footer() {
     <footer
       style={{
         borderTop: "1px solid var(--border-subtle)",
-        background: "rgba(6,9,26,0.95)",
+        background: "var(--bg-surface)",
         backdropFilter: "blur(20px)",
       }}
     >
@@ -46,26 +47,7 @@ export function Footer() {
         {/* Brand Column */}
         <div>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none", marginBottom: 16 }}>
-            <div
-              style={{
-                width: 36, height: 36, borderRadius: 11,
-                background: "linear-gradient(135deg, #0ea5e9, #0284c7)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                boxShadow: "0 0 16px rgba(14,165,233,0.3)",
-              }}
-            >
-              <Shield size={19} color="white" />
-            </div>
-            <span
-              style={{
-                fontSize: 20, fontWeight: 900, letterSpacing: "-0.04em",
-                fontFamily: "'Space Grotesk', sans-serif",
-                background: "linear-gradient(135deg, #e2e8f0, #38bdf8)",
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-              }}
-            >
-              SecureX
-            </span>
+            <Image src="/logo.png" alt="SecureX Logo" width={140} height={35} style={{ objectFit: "contain" }} />
           </Link>
           <p style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.75, maxWidth: 300, marginBottom: 20 }}>
             Professional web security auditing platform. Exposing vulnerabilities across 15 security domains using real threat intelligence APIs.

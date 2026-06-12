@@ -24,6 +24,11 @@ export const metadata: Metadata = {
       },
     ],
   },
+  icons: {
+    icon: "/slogo.png",
+    shortcut: "/slogo.png",
+    apple: "/slogo.png",
+  },
   twitter: {
     card: "summary_large_image",
     title: "SecureX — Professional Web Security Scanner",

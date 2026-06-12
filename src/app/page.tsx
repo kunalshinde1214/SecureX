@@ -6,6 +6,7 @@ import {
   Eye, FileSearch, Radio, Terminal, Zap,
   ArrowRight, CheckCircle, TrendingUp, BarChart2
 } from "lucide-react";
+import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { URLInput } from "@/components/URLInput";
 import { ScanProgress } from "@/components/ScanProgress";
@@ -221,26 +222,11 @@ export default function Page() {
   // ─── Home / Landing View ──────────────────────────────────────────────────
   return (
     <div style={{ overflowX: "hidden" }}>
-      
-      {/* ── Navbar ── */}
-      <nav style={{ padding: "24px 40px", display: "flex", justifyContent: "space-between", alignItems: "center", maxWidth: 1200, margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 40, height: 40, background: "var(--text-primary)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--bg-surface)" }}>
-            <Shield size={22} />
-          </div>
-          <span style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.05em", color: "var(--text-primary)" }}>
-            SecureX
-          </span>
-        </div>
-        <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
-          <a href="/docs" style={{ color: "var(--text-secondary)", fontSize: 14, fontWeight: 500, textDecoration: "none" }} className="hover:text-slate-900 transition-colors">API Docs</a>
-          <a href="/admin/login" style={{ color: "var(--text-secondary)", fontSize: 14, fontWeight: 500, textDecoration: "none" }} className="hover:text-slate-900 transition-colors">Admin Panel</a>
-        </div>
-      </nav>
+
 
       {/* ── Hero Section ── */}
       <section style={{ position: "relative", padding: "100px 24px 80px", textAlign: "center", minHeight: "85vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-        
+
         {/* Animated Background Elements */}
         <motion.div style={{ y: y1, position: "absolute", top: "10%", left: "5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(14,165,233,0.1) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
         <motion.div style={{ y: y2, position: "absolute", bottom: "10%", right: "5%", width: 400, height: 400, background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)", borderRadius: "50%", pointerEvents: "none" }} />
@@ -255,12 +241,12 @@ export default function Page() {
             <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#0ea5e9", animation: "pulse 2s infinite" }} />
             SecureX Enterprise Intelligence Engine v2.0
           </div>
-          
+
           <h1 style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 900, lineHeight: 1.05, marginBottom: 24, letterSpacing: "-0.03em" }}>
             The Ultimate Security Audit for<br />
             <TypedHeadline />
           </h1>
-          
+
           <p style={{ fontSize: "clamp(16px, 2vw, 20px)", color: "var(--text-secondary)", maxWidth: 640, margin: "0 auto 48px", lineHeight: 1.6 }}>
             Run an instant, boardroom-ready security sweep combining 13 live APIs to detect vulnerabilities before hackers do. No signups, no wait.
           </p>
@@ -372,7 +358,7 @@ export default function Page() {
             <h3 style={{ fontSize: "clamp(28px, 3vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.1 }}>Powered By Live Threat Intelligence</h3>
             <p style={{ fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6 }}>Every check uses live API calls to trusted security databases. No mocked data, no stale reports. We verify against the global standard.</p>
           </div>
-          
+
           <div style={{ flex: 1, display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "flex-end" }}>
             {APIS.map((api, i) => (
               <motion.div
@@ -408,8 +394,10 @@ export default function Page() {
           }}
         >
           <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
             style={{ display: "inline-block", marginBottom: 24 }}
           >
             <Shield size={64} style={{ color: "#38bdf8" }} />

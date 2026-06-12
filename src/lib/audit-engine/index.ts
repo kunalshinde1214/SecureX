@@ -6,7 +6,8 @@ import { runAuthCheck } from "./checks/dns-check"; // previously runDNSCheck
 import { runInputValidationCheck } from "./checks/content-check"; // previously runContentCheck
 import { runServerSecurityCheck } from "./checks/tech-check"; // previously runTechCheck
 import { runDatabaseSecurityCheck } from "./checks/reputation-check"; // previously runReputationCheck
-import { runAPICheck, runPerformanceCheck } from "./checks/api-port-check"; // runPerformanceCheck replaces runPortCheck
+import { runAPICheck } from "./checks/api-port-check";
+import { runPerformanceCheck } from "./checks/performance-check";
 import {
   runComplianceCheck,
   runFileUploadCheck,

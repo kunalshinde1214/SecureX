@@ -4,39 +4,39 @@
 /* ─── Design Tokens ──────────────────────────────────────────────────────── */
 :root {
   /* Premium Light Palette */
-  --bg-base:       #FAFAFA;
+  --bg-base:       #F3F6FA;
   --bg-surface:    #FFFFFF;
   --bg-card:       #FFFFFF;
   --bg-card-hover: #F8FAFC;
   --bg-elevated:   #FFFFFF;
 
   /* Borders */
-  --border-subtle:  #F1F5F9;
-  --border-default: #E2E8F0;
-  --border-active:  rgba(14, 165, 233, 0.45);
-  --border-glow:    rgba(14, 165, 233, 0.15);
+  --border-subtle:  #E8EEF5;
+  --border-default: #D1DBE8;
+  --border-active:  rgba(14, 165, 233, 0.6);
+  --border-glow:    rgba(14, 165, 233, 0.2);
 
   /* Text */
-  --text-primary:   #0F172A;
-  --text-secondary: #475569;
-  --text-muted:     #94A3B8;
+  --text-primary:   #08122B;
+  --text-secondary: #3B4B6B;
+  --text-muted:     #7B8C9F;
 
   /* Accents */
-  --accent-primary:  #0EA5E9;
-  --accent-cyan:     #06B6D4;
-  --accent-green:    #10B981;
-  --accent-yellow:   #F59E0B;
-  --accent-orange:   #F97316;
-  --accent-red:      #EF4444;
-  --accent-critical: #DC2626;
-  --accent-purple:   #8B5CF6;
-  --accent-violet:   #3B82F6;
+  --accent-primary:  #0284C7;
+  --accent-cyan:     #0891B2;
+  --accent-green:    #059669;
+  --accent-yellow:   #D97706;
+  --accent-orange:   #EA580C;
+  --accent-red:      #E11D48;
+  --accent-critical: #BE123C;
+  --accent-purple:   #7C3AED;
+  --accent-violet:   #4F46E5;
 
   /* Glow colors */
-  --glow-primary:  rgba(34, 211, 238, 0.3);
-  --glow-green:    rgba(16, 185, 129, 0.25);
-  --glow-red:      rgba(239, 68, 68, 0.25);
-  --glow-purple:   rgba(139, 92, 246, 0.25);
+  --glow-primary:  rgba(2, 132, 199, 0.3);
+  --glow-green:    rgba(5, 150, 105, 0.25);
+  --glow-red:      rgba(225, 29, 72, 0.25);
+  --glow-purple:   rgba(124, 58, 237, 0.25);
 
   /* Radius */
   --radius-sm: 4px;

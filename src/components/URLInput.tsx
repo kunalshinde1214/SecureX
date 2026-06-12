@@ -53,26 +53,26 @@ export function URLInput({ onSubmit, loading }: URLInputProps) {
           style={{
             display: "flex",
             gap: 12,
-            background: "rgba(12, 18, 40, 0.8)",
+            background: "var(--bg-surface)",
             border: "1px solid var(--border-default)",
             borderRadius: "var(--radius-xl)",
             padding: "8px 8px 8px 24px",
             transition: "all 0.3s cubic-bezier(0.4,0,0.2,1)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.05)",
             backdropFilter: "blur(20px)",
           }}
           onFocus={(e) => {
             const el = e.currentTarget as HTMLElement;
             el.style.borderColor = "var(--accent-primary)";
-            el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), 0 0 0 3px rgba(14, 165, 233, 0.15), 0 0 20px rgba(14, 165, 233, 0.2)";
-            el.style.background = "rgba(15, 22, 50, 0.9)";
+            el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.05), 0 0 0 3px rgba(14, 165, 233, 0.15)";
+            el.style.background = "var(--bg-surface)";
           }}
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget)) {
               const el = e.currentTarget as HTMLElement;
               el.style.borderColor = "var(--border-default)";
-              el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)";
-              el.style.background = "rgba(12, 18, 40, 0.8)";
+              el.style.boxShadow = "0 8px 32px rgba(0,0,0,0.05)";
+              el.style.background = "var(--bg-surface)";
             }
           }}
         >
@@ -128,7 +128,7 @@ export function URLInput({ onSubmit, loading }: URLInputProps) {
               style={{
                 flex: 1,
                 padding: "12px 14px",
-                background: depth === opt.value ? "rgba(14, 165, 233, 0.1)" : "rgba(12, 18, 40, 0.5)",
+                background: depth === opt.value ? "rgba(14, 165, 233, 0.1)" : "var(--bg-surface)",
                 border: `1px solid ${depth === opt.value ? "rgba(14, 165, 233, 0.4)" : "var(--border-subtle)"}`,
                 borderRadius: "var(--radius-md)",
                 cursor: "pointer",
@@ -136,7 +136,7 @@ export function URLInput({ onSubmit, loading }: URLInputProps) {
                 textAlign: "center",
                 position: "relative",
                 overflow: "hidden",
-                boxShadow: depth === opt.value ? "0 4px 12px rgba(14, 165, 233, 0.1)" : "none",
+                boxShadow: depth === opt.value ? "0 4px 12px rgba(14, 165, 233, 0.1)" : "0 2px 5px rgba(0,0,0,0.02)",
               }}
             >
               {depth === opt.value && (
@@ -166,13 +166,14 @@ export function URLInput({ onSubmit, loading }: URLInputProps) {
               style={{
                 fontSize: 12,
                 color: "var(--text-secondary)",
-                background: "rgba(255,255,255,0.03)",
-                border: "1px solid rgba(255,255,255,0.08)",
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
                 cursor: "pointer",
                 padding: "4px 12px",
                 borderRadius: 20,
                 transition: "all 0.2s",
                 fontWeight: 500,
+                boxShadow: "0 2px 4px rgba(0,0,0,0.02)"
               }}
               className="hover:bg-sky-500/10 hover:text-sky-400 hover:border-sky-500/30"
             >

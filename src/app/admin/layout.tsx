@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import {
   LayoutDashboard, Globe, Clock, Server, Mail, UserCheck, Settings,
   ShieldAlert, List, FileText, Activity, ExternalLink, ChevronRight,
@@ -53,32 +54,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               borderBottom: "1px solid var(--border-default)",
               display: "flex",
               alignItems: "center",
+              justifyContent: "flex-start",
               gap: 12,
             }}
           >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: "linear-gradient(135deg, #2563eb, #0891b2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                boxShadow: "0 0 16px rgba(37,99,235,0.3)",
-                flexShrink: 0,
-              }}
-            >
-              <ShieldAlert size={19} color="white" />
-            </div>
-            <div>
-              <div style={{ fontSize: 16, fontWeight: 900, color: "var(--text-primary)", lineHeight: 1.2, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.02em" }}>
-                SecureX
-              </div>
-              <div style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: 0.5, marginTop: 1, fontWeight: 700 }}>
-                ADMIN CONSOLE
-              </div>
-            </div>
+            <Image src="/logo.png" alt="SecureX Admin Logo" width={140} height={35} style={{ objectFit: "contain" }} />
           </div>
 
           {/* Status Badge */}

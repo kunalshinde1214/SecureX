@@ -6,6 +6,7 @@ import { ScanReport } from "@/types/audit";
 import { ScoreGauge } from "./ScoreGauge";
 import { CategoryCard } from "./CategoryCard";
 import { format } from "date-fns";
+import Image from "next/image";
 
 export function AuditReport({ report }: { report: ScanReport }) {
   const [downloading, setDownloading] = useState(false);
@@ -95,11 +96,9 @@ export function AuditReport({ report }: { report: ScanReport }) {
       {/* ── Branding Header ── */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid var(--border-subtle)", paddingBottom: 24 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ width: 40, height: 40, background: "var(--text-primary)", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff" }}>
-            <Shield size={22} />
-          </div>
-          <span style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.05em" }}>
-            SecureX <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>|</span> Report
+          <Image src="/logo.png" alt="SecureX Logo" width={140} height={35} style={{ objectFit: "contain" }} />
+          <span style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.05em", color: "var(--text-muted)" }}>
+            | Report
           </span>
         </div>
         <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
