@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, Share2, Shield, Globe, Clock, CheckCircle, AlertTriangle, Printer } from "lucide-react";
+import { Download, Share2, Shield, Globe, Clock, CheckCircle, AlertTriangle, Printer, Mail, Send, X } from "lucide-react";
 import { ScanReport } from "@/types/audit";
 import { ScoreGauge } from "./ScoreGauge";
 import { CategoryCard } from "./CategoryCard";
@@ -11,6 +11,10 @@ import Image from "next/image";
 export function AuditReport({ report }: { report: ScanReport }) {
   const [downloading, setDownloading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [emailAddress, setEmailAddress] = useState("");
+  const [sendingEmail, setSendingEmail] = useState(false);
+  const [emailStatus, setEmailStatus] = useState<"idle" | "success" | "error">("idle");
 
   const handleDownloadPdf = async () => {
     setDownloading(true);
@@ -69,6 +73,41 @@ export function AuditReport({ report }: { report: ScanReport }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleSendEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!emailAddress) return;
+    
+    setSendingEmail(true);
+    setEmailStatus("idle");
+
+    try {
+      const res = await fetch("/api/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: emailAddress,
+          reportUrl: window.location.href,
+          score: report.score?.numeric || 0,
+          targetUrl: report.target.url,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to send email");
+      
+      setEmailStatus("success");
+      setTimeout(() => {
+        setEmailModalOpen(false);
+        setEmailStatus("idle");
+        setEmailAddress("");
+      }, 3000);
+    } catch (err) {
+      console.error(err);
+      setEmailStatus("error");
+    } finally {
+      setSendingEmail(false);
+    }
+  };
+
   const domain = (() => {
     try { return new URL(report.target.url).hostname; }
     catch { return report.target.url; }
@@ -101,7 +140,10 @@ export function AuditReport({ report }: { report: ScanReport }) {
             | Report
           </span>
         </div>
-        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 12, alignItems: "center", position: "relative" }}>
+          <button onClick={() => setEmailModalOpen(true)} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13, background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
+            <Mail size={15} /> Email
+          </button>
           <button onClick={() => window.print()} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13, background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
             <Printer size={15} /> Print
           </button>
@@ -113,6 +155,36 @@ export function AuditReport({ report }: { report: ScanReport }) {
             <Share2 size={15} />
             {copied ? "Copied Link" : "Share"}
           </button>
+
+          {/* Email Modal / Dropdown */}
+          {emailModalOpen && (
+            <div style={{ position: "absolute", top: "110%", right: 0, width: 320, background: "var(--bg-surface)", border: "1px solid var(--border-default)", borderRadius: 16, padding: 20, boxShadow: "0 10px 40px rgba(0,0,0,0.1)", zIndex: 100 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+                <h4 style={{ margin: 0, fontSize: 15, fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+                  <Mail size={16} color="var(--accent-primary)" /> Email Report
+                </h4>
+                <button onClick={() => setEmailModalOpen(false)} style={{ background: "transparent", border: "none", cursor: "pointer", color: "var(--text-muted)" }}>
+                  <X size={16} />
+                </button>
+              </div>
+              <form onSubmit={handleSendEmail} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <input 
+                  type="email" 
+                  value={emailAddress}
+                  onChange={(e) => setEmailAddress(e.target.value)}
+                  placeholder="name@company.com"
+                  required
+                  style={{ width: "100%", padding: "10px 14px", borderRadius: 8, border: "1px solid var(--border-subtle)", background: "var(--bg-base)", color: "var(--text-primary)", fontSize: 14, outline: "none" }}
+                />
+                <button type="submit" disabled={sendingEmail} className="btn-primary" style={{ width: "100%", padding: 12, borderRadius: 8, border: "none", display: "flex", justifyContent: "center", alignItems: "center", gap: 8, background: "var(--accent-primary)", color: "#fff" }}>
+                  {sendingEmail ? <span className="animate-spin">⟳</span> : <Send size={15} />}
+                  {sendingEmail ? "Sending..." : "Send Report"}
+                </button>
+                {emailStatus === "success" && <div style={{ color: "#10b981", fontSize: 12, textAlign: "center", fontWeight: 600 }}>Email sent successfully!</div>}
+                {emailStatus === "error" && <div style={{ color: "#ef4444", fontSize: 12, textAlign: "center", fontWeight: 600 }}>Failed to send email. Try again.</div>}
+              </form>
+            </div>
+          )}
         </div>
       </div>
 

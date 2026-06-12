@@ -260,7 +260,7 @@ export default function Page() {
             {[
               { t: "100% Free Audit", c: "#10b981" },
               { t: "No Credit Card", c: "#0ea5e9" },
-              { t: "Live Live Data", c: "#8b5cf6" },
+              { t: "Live Threat Intel", c: "#8b5cf6" },
             ].map((item) => (
               <div key={item.t} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 500, color: "var(--text-secondary)" }}>
                 <CheckCircle size={16} style={{ color: item.c }} />
@@ -269,15 +269,6 @@ export default function Page() {
             ))}
           </div>
         </motion.div>
-      </section>
-
-      {/* ── Stats Section ── */}
-      <section style={{ padding: "40px 24px", background: "var(--bg-surface)", borderTop: "1px solid var(--border-subtle)", borderBottom: "1px solid var(--border-subtle)" }}>
-        <div style={{ maxWidth: 1000, margin: "0 auto", display: "flex", justifyContent: "space-around", flexWrap: "wrap", gap: 40 }}>
-          <ThreatCounter target={15042} label="SCANS PERFORMED" />
-          <ThreatCounter target={98200} label="THREATS BLOCKED" />
-          <ThreatCounter target={120} label="SECURITY CHECKS" />
-        </div>
       </section>
 
       {/* ── Features Grid ── */}
