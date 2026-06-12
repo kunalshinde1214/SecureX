@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Scan {
+  id        String   @id @default(cuid())
+  url       String
+  domain    String
+  score     Int
+  grade     String
+  status    String   // "PENDING", "SCANNING", "COMPLETE", "FAILED"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Stored as JSON string
+  report    String?
+}
+
+model SystemConfig {
+  key   String @id
+  value String
+}
+
+model ScheduledAudit {
+  id        String   @id @default(cuid())
+  domain    String
+  url       String
+  frequency String   // "DAILY", "WEEKLY", "MONTHLY"
+  lastRun   DateTime?
+  nextRun   DateTime
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  email     String
+  website   String
+  score     Int?
+  status    String   // "NEW", "CONTACTED", "INTERESTED", "CLOSED"
+  notes     String?
+  priority  String   @default("NORMAL") // "LOW", "NORMAL", "HIGH"
+  createdAt DateTime @default(now())
+}
+
+model UserAccount {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  role         String   // "ADMIN", "SUBSCRIBER", "FREE"
+  status       String   // "ACTIVE", "SUSPENDED"
+  lastActivity DateTime?
+  createdAt    DateTime @default(now())
+}
+
+model AdminActionLog {
+  id        String   @id @default(cuid())
+  action    String
+  detail    String
+  createdAt DateTime @default(now())
+}
