@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { Prisma } from "@prisma/client";
+
+export const dynamic = 'force-dynamic';
 
 // GET all scans with optional search/filter
 export async function GET(req: NextRequest) {
