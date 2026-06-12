@@ -11,7 +11,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { URLInput } from "@/components/URLInput";
 import { ScanProgress } from "@/components/ScanProgress";
 import { AuditReport } from "@/components/AuditReport";
-import { GoogleAdBanner } from "@/components/GoogleAdBanner";
 import { ScanReport } from "@/types/audit";
 
 type AppState = "home" | "scanning" | "report";
@@ -256,9 +255,6 @@ export default function Page() {
           <div style={{ position: "relative", zIndex: 10 }}>
             <URLInput onSubmit={handleStartScan} />
           </div>
-
-          {/* Ad Banner */}
-          <GoogleAdBanner />
 
           {/* Floating Features */}
           <div style={{ marginTop: 32, display: "flex", gap: 32, justifyContent: "center", flexWrap: "wrap" }}>
