@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { scanStore } from "@/lib/scan-store";
 
 export const dynamic = "force-dynamic";

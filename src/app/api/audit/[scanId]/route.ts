@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { scanStore } from "@/lib/scan-store";
 import { prisma } from "@/lib/db";
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ scanId: string }> }

@@ -4,6 +4,8 @@ import { scanStore } from "@/lib/scan-store";
 import { prisma } from "@/lib/db";
 import { extractDomain, scoreToGrade } from "@/lib/utils";
 
+export const dynamic = 'force-dynamic';
+
 const ScanRequestSchema = z.object({
   url: z.string().url("Please enter a valid URL"),
   depth: z.enum(["QUICK", "STANDARD", "DEEP"]).default("STANDARD"),
