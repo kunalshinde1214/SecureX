@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const schedules = await prisma.scheduledAudit.findMany({
       orderBy: { createdAt: "desc" }

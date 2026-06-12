@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 export const dynamic = 'force-dynamic';
 
 // GET all config keys
-export async function GET() {
+export async function GET(req: Request) {
   try {
     const configs = await prisma.systemConfig.findMany();
     const configMap = configs.reduce((acc, config) => {
