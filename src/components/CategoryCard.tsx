@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, ChevronRight, AlertTriangle, ShieldCheck, Info } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { AuditCategory, CheckResult, Finding, CATEGORY_LABELS } from "@/types/audit";
 
 interface CategoryCardProps {
@@ -34,18 +35,23 @@ export function CategoryCard({ category, result }: CategoryCardProps) {
     result.score >= 60 ? "#fbbf24" : "#ef4444";
 
   return (
-    <div className="glass-card" style={{ marginBottom: 16, overflow: "hidden" }}>
+    <motion.div 
+      initial={false}
+      animate={{ backgroundColor: expanded ? "rgba(255,255,255,0.02)" : "rgba(255,255,255,0.0)" }}
+      whileHover={{ scale: 1.01, boxShadow: "0 10px 30px -10px rgba(0,0,0,0.3)" }}
+      transition={{ duration: 0.2 }}
+      className="glass-card" 
+      style={{ marginBottom: 16, overflow: "hidden", cursor: "pointer" }}
+      onClick={() => setExpanded(!expanded)}
+    >
       {/* Header */}
       <div
-        onClick={() => setExpanded(!expanded)}
+
         style={{
           padding: "20px 24px",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          cursor: "pointer",
-          background: expanded ? "rgba(255,255,255,0.02)" : "transparent",
-          transition: "background 0.2s",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
@@ -74,14 +80,25 @@ export function CategoryCard({ category, result }: CategoryCardProps) {
             </div>
           </div>
         </div>
-        <div style={{ color: "var(--text-muted)" }}>
-          {expanded ? <ChevronDown size={20} /> : <ChevronRight size={20} />}
-        </div>
+        <motion.div 
+          animate={{ rotate: expanded ? 90 : 0 }} 
+          transition={{ duration: 0.2 }}
+          style={{ color: "var(--text-muted)" }}
+        >
+          <ChevronRight size={20} />
+        </motion.div>
       </div>
 
       {/* Findings Content */}
-      {expanded && (
-        <div style={{ borderTop: "1px solid var(--border-subtle)", padding: "0 24px" }}>
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            style={{ borderTop: "1px solid var(--border-subtle)", padding: "0 24px" }}
+          >
           {result.findings.length === 0 ? (
             <div style={{ padding: "24px 0", textAlign: "center", color: "var(--text-muted)", fontSize: 14 }}>
               No findings recorded for this category.
@@ -127,8 +144,9 @@ export function CategoryCard({ category, result }: CategoryCardProps) {
               ))}
             </div>
           )}
-        </div>
-      )}
-    </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

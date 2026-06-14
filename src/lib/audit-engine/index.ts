@@ -8,6 +8,8 @@ import { runServerSecurityCheck } from "./checks/tech-check"; // previously runT
 import { runDatabaseSecurityCheck } from "./checks/reputation-check"; // previously runReputationCheck
 import { runAPICheck } from "./checks/api-port-check";
 import { runPerformanceCheck } from "./checks/performance-check";
+import { runThreatIntelCheck } from "./checks/threat-intel-check";
+import { runOSINTCheck } from "./checks/osint-check";
 import {
   runComplianceCheck,
   runFileUploadCheck,
@@ -79,6 +81,8 @@ export async function runAudit(
     { category: "CLOUD_HOSTING", runner: runCloudCheck },
     { category: "PERFORMANCE_TESTING", runner: runPerformanceCheck },
     { category: "COMPLIANCE", runner: runComplianceCheck },
+    { category: "THREAT_INTELLIGENCE", runner: runThreatIntelCheck },
+    { category: "OSINT_RECON", runner: runOSINTCheck },
   ];
 
   // Filter checks based on options

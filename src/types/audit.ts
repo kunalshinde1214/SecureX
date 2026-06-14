@@ -18,7 +18,9 @@ export type AuditCategory =
   | "THIRD_PARTY"
   | "CLOUD_HOSTING"
   | "PERFORMANCE_TESTING"
-  | "COMPLIANCE";
+  | "COMPLIANCE"
+  | "THREAT_INTELLIGENCE"
+  | "OSINT_RECON";
 
 export const CATEGORY_LABELS: Record<AuditCategory, string> = {
   AUTH_ACCESS: "Authentication & Access Control",
@@ -36,13 +38,15 @@ export const CATEGORY_LABELS: Record<AuditCategory, string> = {
   CLOUD_HOSTING: "Cloud & Hosting Security",
   PERFORMANCE_TESTING: "Performance & Security Testing",
   COMPLIANCE: "Compliance Checks",
+  THREAT_INTELLIGENCE: "Threat Intelligence & Reputation",
+  OSINT_RECON: "OSINT & Reconnaissance",
 };
 
 export const CATEGORY_WEIGHTS: Record<AuditCategory, number> = {
-  AUTH_ACCESS: 0.10,
-  SSL_TLS: 0.10,
-  OWASP_TOP10: 0.15,
-  SERVER_SECURITY: 0.08,
+  AUTH_ACCESS: 0.08,
+  SSL_TLS: 0.08,
+  OWASP_TOP10: 0.10,
+  SERVER_SECURITY: 0.07,
   DATABASE_SECURITY: 0.08,
   API_SECURITY: 0.08,
   INPUT_VALIDATION: 0.08,
@@ -54,6 +58,8 @@ export const CATEGORY_WEIGHTS: Record<AuditCategory, number> = {
   CLOUD_HOSTING: 0.04,
   PERFORMANCE_TESTING: 0.02,
   COMPLIANCE: 0.02,
+  THREAT_INTELLIGENCE: 0.05,
+  OSINT_RECON: 0.05,
 };
 
 export interface Finding {

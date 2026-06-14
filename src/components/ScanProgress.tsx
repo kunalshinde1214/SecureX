@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle, AlertCircle, Clock, Loader, X, ExternalLink, Activity } from "lucide-react";
+import { motion } from "framer-motion";
 import { AuditCategory, CheckResult, CATEGORY_LABELS } from "@/types/audit";
 import { ScanReport } from "@/types/audit";
 
@@ -23,7 +24,7 @@ const ALL_CATEGORIES: AuditCategory[] = [
   "AUTH_ACCESS", "SSL_TLS", "OWASP_TOP10", "SERVER_SECURITY",
   "DATABASE_SECURITY", "API_SECURITY", "INPUT_VALIDATION", "SECURITY_HEADERS",
   "FILE_UPLOAD", "LOGGING_MONITORING", "BACKUP_RECOVERY", "THIRD_PARTY",
-  "CLOUD_HOSTING", "PERFORMANCE_TESTING", "COMPLIANCE",
+  "CLOUD_HOSTING", "PERFORMANCE_TESTING", "COMPLIANCE", "THREAT_INTELLIGENCE", "OSINT_RECON"
 ];
 
 export function ScanProgress({ scanId, targetUrl, onComplete, onCancel }: ScanProgressProps) {
@@ -193,11 +194,22 @@ export function ScanProgress({ scanId, targetUrl, onComplete, onCancel }: ScanPr
       </div>
 
       {/* ── Checks Grid ─────────────────────────────────────────────────── */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}>
+      <motion.div 
+        initial="hidden"
+        animate="show"
+        variants={{
+          hidden: { opacity: 0 },
+          show: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05 }
+          }
+        }}
+        style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 14 }}
+      >
         {checks.map((check, i) => (
           <CheckCard key={check.category} check={check} index={i} />
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -222,8 +234,15 @@ function CheckCard({ check, index }: { check: CheckState; index: number }) {
     : check.status === "error" ? "rgba(239,68,68,0.3)"
     : "var(--border-subtle)";
 
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 24 } }
+  };
+
   return (
-    <div
+    <motion.div
+      variants={cardVariants}
+      whileHover={{ scale: 1.02 }}
       style={{
         padding: "16px 20px",
         background: bg,
@@ -232,8 +251,6 @@ function CheckCard({ check, index }: { check: CheckState; index: number }) {
         display: "flex",
         alignItems: "center",
         gap: 14,
-        transition: "all 0.3s ease",
-        animation: `fadeInUp 0.4s ease ${index * 0.05}s both`,
         position: "relative",
         overflow: "hidden",
       }}
@@ -264,6 +281,6 @@ function CheckCard({ check, index }: { check: CheckState; index: number }) {
           {check.result.score}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
