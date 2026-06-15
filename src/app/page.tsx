@@ -143,7 +143,8 @@ const APIS = [
   "SSL Labs (Qualys)", "Mozilla Observatory", "Shodan InternetDB",
   "Google DoH", "RDAP (IANA)", "crt.sh Certificate Transparency",
   "OSV.dev", "HackerTarget", "NVD (NIST)", "AbuseIPDB",
-  "IPInfo.io", "VirusTotal", "Cloudflare DoH",
+  "IPInfo.io", "VirusTotal", "Cloudflare DoH", "AlienVault OTX",
+  "Pulsedive", "Hunter.io", "URLScan.io"
 ];
 
 const HOW_STEPS = [
@@ -257,13 +258,13 @@ export default function Page() {
           </div>
 
           {/* Floating Features */}
-          <div style={{ marginTop: 32, display: "flex", gap: 32, justifyContent: "center", flexWrap: "wrap" }}>
+          <div className="mt-8 flex flex-wrap justify-center gap-4 sm:gap-8">
             {[
               { t: "100% Free Audit", c: "#10b981" },
               { t: "No Credit Card", c: "#0ea5e9" },
               { t: "Live Threat Intel", c: "#8b5cf6" },
             ].map((item) => (
-              <div key={item.t} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 14, fontWeight: 500, color: "var(--text-secondary)" }}>
+              <div key={item.t} className="flex items-center gap-2 text-sm font-medium text-[var(--text-secondary)]">
                 <CheckCircle size={16} style={{ color: item.c }} />
                 {item.t}
               </div>
@@ -342,16 +343,15 @@ export default function Page() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="glass-card-elevated"
-          style={{ padding: "48px", display: "flex", flexWrap: "wrap", gap: 40, alignItems: "center", justifyContent: "space-between" }}
+          className="glass-card-elevated flex flex-col md:flex-row flex-wrap items-center justify-between gap-10 p-8 sm:p-12"
         >
-          <div style={{ maxWidth: 480 }}>
+          <div className="w-full max-w-[480px]">
             <div style={{ display: "inline-flex", padding: "6px 12px", background: "rgba(16,185,129,0.1)", borderRadius: 100, color: "#059669", fontSize: 12, fontWeight: 700, marginBottom: 16, letterSpacing: 0.5 }}>INTEGRATIONS</div>
             <h3 style={{ fontSize: "clamp(28px, 3vw, 36px)", fontWeight: 900, marginBottom: 16, lineHeight: 1.1 }}>Powered By Live Threat Intelligence</h3>
             <p style={{ fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.6 }}>Every check uses live API calls to trusted security databases. No mocked data, no stale reports. We verify against the global standard.</p>
           </div>
 
-          <div style={{ flex: 1, display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "flex-end" }}>
+          <div className="flex-1 w-full flex flex-wrap gap-3 justify-start md:justify-end">
             {APIS.map((api, i) => (
               <motion.div
                 key={api}
@@ -359,7 +359,7 @@ export default function Page() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.05 }}
-                style={{ padding: "10px 16px", background: "var(--bg-surface)", border: "1px solid var(--border-subtle)", borderRadius: 8, fontSize: 14, fontWeight: 500, color: "var(--text-secondary)", boxShadow: "0 2px 4px rgba(0,0,0,0.02)" }}
+                className="px-4 py-2.5 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-lg text-sm font-medium text-[var(--text-secondary)] shadow-[0_2px_4px_rgba(0,0,0,0.02)]"
               >
                 {api}
               </motion.div>
@@ -375,15 +375,7 @@ export default function Page() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          style={{
-            padding: "64px 48px",
-            background: "var(--text-primary)",
-            color: "var(--bg-surface)",
-            borderRadius: 32,
-            position: "relative",
-            overflow: "hidden",
-            boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)"
-          }}
+          className="bg-[var(--text-primary)] text-[var(--bg-surface)] rounded-3xl relative overflow-hidden shadow-2xl p-8 sm:p-12 md:p-16"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}

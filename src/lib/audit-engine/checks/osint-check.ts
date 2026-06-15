@@ -84,33 +84,7 @@ export async function runOSINTCheck(target: ScanTarget): Promise<CheckResult> {
       }
     }
 
-    // 2. SecurityTrails (Subdomains)
-    if (process.env.SECURITYTRAILS_API_KEY) {
-      try {
-        const stRes = await fetch(`https://api.securitytrails.com/v1/domain/${target.domain}/subdomains`, {
-          headers: { "APIKEY": process.env.SECURITYTRAILS_API_KEY },
-          signal: AbortSignal.timeout(5000),
-        });
-        if (stRes.ok) {
-          const stData = await stRes.json();
-          if (stData.subdomains && stData.subdomains.length > 0) {
-            findings.push({
-              id: "securitytrails-subdomains",
-              category: "OSINT_RECON",
-              title: `SecurityTrails: ${stData.subdomain_count} Subdomains Found`,
-              description: `Discovered multiple subdomains associated with the root domain.`,
-              riskLevel: "INFO",
-              evidence: `Subdomains count: ${stData.subdomain_count}`,
-              impact: "Identifies the external attack surface of the organization.",
-              remediation: "Ensure all subdomains are inventoried and properly secured.",
-              effort: "LOW",
-            });
-          }
-        }
-      } catch { /* ignore */ }
-    }
-
-    // 3. Hunter.io (Emails)
+    // 2. Hunter.io (Emails)
     if (process.env.HUNTER_API_KEY) {
       try {
         const hunterRes = await fetch(`https://api.hunter.io/v2/domain-search?domain=${target.domain}&api_key=${process.env.HUNTER_API_KEY}`, {
@@ -168,7 +142,7 @@ export async function runOSINTCheck(target: ScanTarget): Promise<CheckResult> {
         title: "Minimal OSINT Footprint",
         description: "No significant data found on external OSINT sources.",
         riskLevel: "PASS",
-        evidence: "Queried Shodan, SecurityTrails, Hunter.io, and URLScan.",
+        evidence: "Queried Shodan, Hunter.io, and URLScan.",
         impact: "Reduces the publicly available attack surface.",
         remediation: "None",
         effort: "LOW",

@@ -20,44 +20,168 @@ export function AuditReport({ report }: { report: ScanReport }) {
     setDownloading(true);
     try {
       const { jsPDF } = await import("jspdf");
-      const doc = new jsPDF();
+      const doc = new jsPDF({ unit: "pt", format: "letter" });
 
-      // White background for report
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, 210, 297, "F");
+      const NAVY = "#0B1F3A";
+      const BLUE = "#1E5FA8";
+      const LIGHT_BLUE = "#EAF2FB";
+      const GREY = "#6B7280";
+      const LIGHT_GREY = "#F4F5F7";
 
-      doc.setTextColor(15, 23, 42); // slate-900
-      doc.setFontSize(24);
-      doc.text("SecureX Audit Report", 20, 30);
-      
-      doc.setFontSize(12);
-      doc.setTextColor(71, 85, 105); // slate-500
-      doc.text(`Target: ${report.target.url}`, 20, 45);
-      doc.text(`Date: ${format(new Date(report.startedAt), "MMM dd, yyyy HH:mm")}`, 20, 52);
-      doc.text(`Overall Score: ${report.score?.numeric || 0}/100`, 20, 59);
+      const SEV_STYLE = {
+        PASS: { color: "#1E8E5A", bg: "#E6F4EC" },
+        INFO: { color: "#3478C4", bg: "#E6EFFA" },
+        LOW: { color: "#8A8F45", bg: "#F3F4DD" },
+        MEDIUM: { color: "#C9A227", bg: "#FBF4DD" },
+        HIGH: { color: "#E0792A", bg: "#FCEBDD" },
+        CRITICAL: { color: "#D14343", bg: "#FBE6E6" }
+      } as const;
 
-      let y = 80;
-      doc.setFontSize(16);
-      doc.setTextColor(15, 23, 42);
-      doc.text("Detailed Findings", 20, y);
-      y += 15;
+      const scoreColor = (s: number) => {
+        if (s >= 90) return SEV_STYLE.PASS;
+        if (s >= 75) return SEV_STYLE.INFO;
+        if (s >= 60) return SEV_STYLE.MEDIUM;
+        if (s >= 40) return SEV_STYLE.HIGH;
+        return SEV_STYLE.CRITICAL;
+      };
 
-      report.checkResults.forEach((res) => {
-        if (y > 270) { doc.addPage(); doc.setFillColor(255, 255, 255); doc.rect(0, 0, 210, 297, "F"); y = 20; }
-        doc.setFontSize(14);
-        doc.setTextColor(14, 165, 233); // sky-500
-        doc.text(`${res.category.replace(/_/g, " ")} - Score: ${res.score}`, 20, y);
-        y += 8;
+      const addText = (text: string, x: number, y: number, size: number, color: string, weight: "normal"|"bold" = "normal", align: "left"|"center"|"right" = "left") => {
+        doc.setFont("helvetica", weight);
+        doc.setFontSize(size);
+        doc.setTextColor(color);
+        doc.text(text, x, y, { align });
+      };
 
-        res.findings.forEach(f => {
-          if (y > 270) { doc.addPage(); doc.setFillColor(255, 255, 255); doc.rect(0, 0, 210, 297, "F"); y = 20; }
-          doc.setFontSize(10);
-          doc.setTextColor(51, 65, 85); // slate-700
-          doc.text(`[${f.riskLevel}] ${f.title}`, 25, y);
-          y += 6;
+      const counts = { HIGH: 0, MEDIUM: 0, LOW: 0, INFO: 0, PASS: 0 };
+      report.checkResults.forEach(cat => {
+        cat.findings.forEach(f => {
+          const fSev = f.riskLevel === "CRITICAL" ? "HIGH" : f.riskLevel;
+          if (counts[fSev as keyof typeof counts] !== undefined) {
+            counts[fSev as keyof typeof counts]++;
+          }
         });
-        y += 6;
       });
+
+      let y = 0;
+      const marginX = 40;
+      const pageWidth = 612;
+      const pageHeight = 792;
+
+      const newPage = () => {
+        doc.addPage();
+        y = marginX;
+        doc.setFillColor(NAVY);
+        doc.rect(0, 0, pageWidth, 8, "F");
+        doc.setFillColor(BLUE);
+        doc.rect(0, pageHeight - 4, pageWidth, 4, "F");
+      };
+
+      doc.setFillColor(NAVY);
+      doc.rect(0, 0, pageWidth, 8, "F");
+      doc.setFillColor(BLUE);
+      doc.rect(0, pageHeight - 4, pageWidth, 4, "F");
+
+      y = 60;
+      addText("Web Application", marginX, y, 24, NAVY, "bold");
+      y += 28;
+      addText("Security Audit Report", marginX, y, 24, NAVY, "bold");
+      y += 30;
+
+      addText(`Target: ${report.target.url}`, marginX, y, 10.5, GREY);
+      addText(`Date: ${format(new Date(report.startedAt), "MMM dd, yyyy HH:mm")}`, marginX + 280, y, 10.5, GREY);
+      y += 20;
+
+      doc.setDrawColor(BLUE);
+      doc.setLineWidth(1.2);
+      doc.line(marginX, y, pageWidth - marginX, y);
+      y += 40;
+
+      const score = report.score?.numeric || 0;
+      const scColor = scoreColor(score);
+      doc.setDrawColor(scColor.color);
+      doc.setFillColor(scColor.bg);
+      doc.setLineWidth(4);
+      doc.circle(marginX + 50, y + 40, 45, "FD");
+      
+      addText(score.toString(), marginX + 50, y + 45, 26, scColor.color, "bold", "center");
+      addText("/ 100", marginX + 50, y + 60, 8, scColor.color, "normal", "center");
+
+      doc.setFillColor(LIGHT_BLUE);
+      doc.setDrawColor("#D6E4F5");
+      doc.setLineWidth(0.5);
+      doc.roundedRect(marginX + 130, y, 380, 80, 6, 6, "FD");
+      
+      const sevs = ["HIGH", "MEDIUM", "LOW", "INFO", "PASS"] as const;
+      const boxW = 380 / 5;
+      sevs.forEach((sev, i) => {
+        const sx = marginX + 130 + i * boxW + boxW / 2;
+        addText(counts[sev].toString(), sx, y + 35, 18, SEV_STYLE[sev].color, "bold", "center");
+        addText(sev, sx, y + 55, 8, GREY, "bold", "center");
+      });
+
+      y += 110;
+      addText("Category Breakdown", marginX, y, 12.5, NAVY, "bold");
+      y += 10;
+      doc.setDrawColor("#D6DAE0");
+      doc.setLineWidth(0.6);
+      doc.line(marginX, y, pageWidth - marginX, y);
+      y += 20;
+
+      report.checkResults.forEach(cat => {
+        const catH = 40 + (cat.findings.length > 0 ? cat.findings.length * 20 : 20);
+        if (y + catH > pageHeight - 50) {
+          newPage();
+          y += 40;
+        }
+
+        const catCol = scoreColor(cat.score);
+        doc.setFillColor(catCol.bg);
+        doc.setDrawColor("#E2E5EA");
+        doc.roundedRect(marginX, y, pageWidth - marginX * 2, catH, 6, 6, "FD");
+        doc.setDrawColor(catCol.color);
+        doc.setLineWidth(0.75);
+        doc.line(marginX, y + 30, pageWidth - marginX, y + 30);
+
+        addText(cat.category.replace(/_/g, " "), marginX + 10, y + 20, 11.5, NAVY, "bold");
+        
+        doc.setFillColor(LIGHT_GREY);
+        doc.roundedRect(marginX + 280, y + 12, 120, 8, 4, 4, "F");
+        if (cat.score > 0) {
+          doc.setFillColor(catCol.color);
+          doc.roundedRect(marginX + 280, y + 12, Math.max(120 * (cat.score / 100), 8), 8, 4, 4, "F");
+        }
+
+        doc.setFillColor(catCol.bg);
+        doc.setDrawColor(catCol.color);
+        doc.roundedRect(marginX + 420, y + 8, 40, 16, 4, 4, "FD");
+        addText(cat.score.toString(), marginX + 440, y + 19, 10, catCol.color, "bold", "center");
+
+        let fy = y + 45;
+        if (cat.findings.length === 0) {
+          addText("No findings reported.", marginX + 15, fy, 9.5, GREY);
+        } else {
+          cat.findings.forEach(f => {
+            const fSev = (f.riskLevel === "CRITICAL" ? "HIGH" : f.riskLevel) as keyof typeof SEV_STYLE;
+            const style = SEV_STYLE[fSev] || SEV_STYLE.INFO;
+            
+            doc.setFillColor(style.bg);
+            doc.setDrawColor(style.color);
+            doc.roundedRect(marginX + 10, fy - 10, 50, 14, 2, 2, "FD");
+            addText(f.riskLevel, marginX + 35, fy, 7, style.color, "bold", "center");
+            
+            addText(f.title.substring(0, 80) + (f.title.length > 80 ? "..." : ""), marginX + 70, fy, 9.3, "#2A2E35");
+            fy += 20;
+          });
+        }
+        y += catH + 15;
+      });
+
+      const pageCount = doc.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        addText("Generated by SecureX Cybersecurity Solutions", pageWidth / 2, pageHeight - 15, 8, GREY, "normal", "center");
+        addText(`Page ${i}`, pageWidth - marginX, 20, 8, GREY, "normal", "right");
+      }
 
       doc.save(`securex-report-${new URL(report.target.url).hostname}.pdf`);
     } catch (e) {
@@ -118,30 +242,18 @@ export function AuditReport({ report }: { report: ScanReport }) {
   ).length;
 
   return (
-    <div className="light-theme-report" style={{ 
-      width: "100%", 
-      maxWidth: 1100, 
-      margin: "0 auto", 
-      display: "flex", 
-      flexDirection: "column", 
-      gap: 32,
-      background: "var(--bg-base)",
-      color: "var(--text-primary)",
-      padding: "24px 32px",
-      borderRadius: "24px",
-      boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)"
-    }}>
+    <div className="light-theme-report w-full max-w-[1100px] mx-auto flex flex-col gap-8 bg-[var(--bg-base)] text-[var(--text-primary)] p-4 sm:p-6 md:p-8 rounded-3xl shadow-2xl">
       
       {/* ── Branding Header ── */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "2px solid var(--border-subtle)", paddingBottom: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b-2 border-[var(--border-subtle)] pb-6">
+        <div className="flex items-center gap-3">
           <Image src="/logo.png" alt="SecureX Logo" width={140} height={35} style={{ objectFit: "contain" }} />
           <span style={{ fontSize: 24, fontWeight: 900, fontFamily: "'Space Grotesk', sans-serif", letterSpacing: "-0.05em", color: "var(--text-muted)" }}>
             | Report
           </span>
         </div>
-        <div style={{ display: "flex", gap: 12, alignItems: "center", position: "relative" }}>
-          <button onClick={() => setEmailModalOpen(true)} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13, background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
+        <div className="flex flex-wrap justify-center gap-3 items-center relative w-full md:w-auto mt-4 md:mt-0">
+          <button onClick={() => setEmailModalOpen(true)} className="btn-secondary flex items-center gap-2" style={{ padding: "8px 16px", fontSize: 13, background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
             <Mail size={15} /> Email
           </button>
           <button onClick={() => window.print()} className="btn-secondary" style={{ padding: "8px 16px", fontSize: 13, background: "transparent", color: "var(--text-secondary)", border: "1px solid var(--border-default)" }}>
@@ -189,9 +301,9 @@ export function AuditReport({ report }: { report: ScanReport }) {
       </div>
 
       {/* ── Top Header ── */}
-      <div className="glass-card-elevated" style={{ padding: "40px", display: "flex", flexWrap: "wrap", gap: 40, alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ flex: 1, minWidth: 300 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+      <div className="glass-card-elevated flex flex-col md:flex-row flex-wrap gap-10 items-center justify-between p-6 sm:p-10">
+        <div className="flex-1 min-w-[280px] w-full text-center md:text-left">
+          <div className="flex flex-col md:flex-row items-center gap-3 mb-4">
             <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(14,165,233,0.1)", border: "1px solid rgba(14,165,233,0.2)", display: "flex", alignItems: "center", justifyContent: "center", color: "#0ea5e9" }}>
               <Globe size={24} />
             </div>
@@ -203,8 +315,8 @@ export function AuditReport({ report }: { report: ScanReport }) {
             </div>
           </div>
           
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 24, marginTop: 24 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, color: "var(--text-secondary)", fontSize: 14 }}>
+          <div className="flex flex-wrap justify-center md:justify-start gap-6 mt-6">
+            <div className="flex items-center gap-2 text-[var(--text-secondary)] text-sm">
               <Clock size={16} /> {format(new Date(report.startedAt), "MMM dd, yyyy · HH:mm")}
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: 8, color: criticalIssues > 0 ? "#dc2626" : "#059669", fontSize: 14, fontWeight: 600 }}>
@@ -214,7 +326,7 @@ export function AuditReport({ report }: { report: ScanReport }) {
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 40 }}>
+        <div className="flex items-center justify-center mt-6 md:mt-0 w-full md:w-auto">
           <ScoreGauge score={report.score?.numeric || 0} size={200} lightMode={true} />
         </div>
       </div>

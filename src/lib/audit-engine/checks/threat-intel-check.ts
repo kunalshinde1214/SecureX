@@ -34,34 +34,7 @@ export async function runThreatIntelCheck(target: ScanTarget): Promise<CheckResu
       }
     } catch { /* ignore */ }
 
-    // 2. Phisherman (Phishing)
-    if (process.env.PHISHERMAN_API_KEY) {
-      try {
-        const phishRes = await fetch(`https://api.phisherman.gg/v2/domains/check/${target.domain}`, {
-          headers: { "Authorization": `Bearer ${process.env.PHISHERMAN_API_KEY}` },
-          signal: AbortSignal.timeout(5000),
-        });
-        if (phishRes.ok) {
-          const phishData = await phishRes.json();
-          if (phishData.status === "verifiedPhish" || phishData.verifiedPhish) {
-            score -= 40;
-            findings.push({
-              id: "phisherman-phishing",
-              category: "THREAT_INTELLIGENCE",
-              title: "Known Phishing Domain",
-              description: `This domain is flagged as a known phishing site by Phisherman.`,
-              riskLevel: "CRITICAL",
-              evidence: "Phisherman API returned verified phishing status.",
-              impact: "The domain is actively deceiving users.",
-              remediation: "Take down phishing content and secure the server.",
-              effort: "HIGH",
-            });
-          }
-        }
-      } catch { /* ignore */ }
-    }
-
-    // 3. AlienVault OTX
+    // 2. AlienVault OTX
     if (process.env.ALIENVAULT_OTX_API_KEY) {
       try {
         const otxRes = await fetch(`https://otx.alienvault.com/api/v1/indicators/domain/${target.domain}/general`, {
@@ -115,37 +88,6 @@ export async function runThreatIntelCheck(target: ScanTarget): Promise<CheckResu
       } catch { /* ignore */ }
     }
 
-    // 5. GreyNoise Community
-    if (process.env.GREYNOISE_API_KEY && target.ip) {
-      try {
-        const gnRes = await fetch(`https://api.greynoise.io/v3/community/${target.ip}`, {
-          headers: { "key": process.env.GREYNOISE_API_KEY, "Accept": "application/json" },
-          signal: AbortSignal.timeout(5000),
-        });
-        if (gnRes.ok) {
-          const gnData = await gnRes.json();
-          if (gnData.noise || gnData.riot) {
-            findings.push({
-              id: "greynoise-intel",
-              category: "THREAT_INTELLIGENCE",
-              title: "GreyNoise Intelligence",
-              description: gnData.riot 
-                ? "This IP belongs to a known benign service (RIOT)." 
-                : `This IP is known internet background noise (Classification: ${gnData.classification}).`,
-              riskLevel: gnData.classification === "malicious" ? "HIGH" : "INFO",
-              evidence: `Noise: ${gnData.noise}, RIOT: ${gnData.riot}, Class: ${gnData.classification}`,
-              impact: "Contextual information regarding the IP's internet-wide scanning activity.",
-              remediation: "N/A",
-              effort: "LOW",
-            });
-            if (gnData.classification === "malicious") {
-               score -= 20;
-            }
-          }
-        }
-      } catch { /* ignore */ }
-    }
-
     if (findings.length === 0 || findings.every(f => f.riskLevel === "INFO")) {
       findings.push({
         id: "threat-intel-clean",
@@ -153,7 +95,7 @@ export async function runThreatIntelCheck(target: ScanTarget): Promise<CheckResu
         title: "Clean Threat Intelligence Profile",
         description: "No significant threat intelligence flags found across checked services.",
         riskLevel: "PASS",
-        evidence: "Queried URLHaus, Phisherman, OTX, Pulsedive, and GreyNoise.",
+        evidence: "Queried URLHaus, OTX, and Pulsedive.",
         impact: "Domain and IP are not currently associated with known large-scale malicious campaigns.",
         remediation: "None",
         effort: "LOW",
