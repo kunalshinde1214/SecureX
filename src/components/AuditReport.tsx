@@ -82,10 +82,30 @@ export function AuditReport({ report }: { report: ScanReport }) {
       doc.rect(0, pageHeight - 4, pageWidth, 4, "F");
 
       y = 60;
-      addText("Web Application", marginX, y, 24, NAVY, "bold");
-      y += 28;
-      addText("Security Audit Report", marginX, y, 24, NAVY, "bold");
-      y += 30;
+      
+      try {
+        const logoRes = await fetch("/logo.png");
+        if (!logoRes.ok) throw new Error("Failed to fetch logo");
+        const logoBlob = await logoRes.blob();
+        const base64data = await new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result as string);
+          reader.readAsDataURL(logoBlob);
+        });
+        
+        // 1.7 inch width = 1.7 * 72 = 122.4 pt. Height = 122.4 * (155/384) = 49.4 pt
+        doc.addImage(base64data, "PNG", marginX, y, 122.4, 49.4);
+        
+        // Offset text to the right by 2.0 inches (144 pt)
+        addText("Web Application", marginX + 144, y + 18, 24, NAVY, "bold");
+        addText("Security Audit Report", marginX + 144, y + 46, 24, NAVY, "bold");
+      } catch (err) {
+        // Fallback if logo fails
+        addText("Web Application", marginX, y + 18, 24, NAVY, "bold");
+        addText("Security Audit Report", marginX, y + 46, 24, NAVY, "bold");
+      }
+      
+      y += 80;
 
       addText(`Target: ${report.target.url}`, marginX, y, 10.5, GREY);
       addText(`Date: ${format(new Date(report.startedAt), "MMM dd, yyyy HH:mm")}`, marginX + 280, y, 10.5, GREY);
