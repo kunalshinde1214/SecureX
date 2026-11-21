@@ -1,6 +1,6 @@
-# 🛡️ WebAudit Pro — Professional Open-Source Security Audit Platform
+# 🛡️ Securex — Professional Open-Source Security Audit Platform
 
-WebAudit Pro is a premium, developer-focused, passive web security scanner built on **Next.js 16 (App Router)** and styled with a custom **Cyber-Physical Security System (obsidian & cyber-blue)** palette. It performs high-velocity, non-intrusive audits across **15 distinct security domains** by aggregating data from industry-leading security registries, passive certificate intelligence logs, and passive port registries—achieving zero-budget execution.
+Securex is a premium, developer-focused, passive web security scanner built on **Next.js 16 (App Router)** and styled with a custom **Cyber-Physical Security System (obsidian & cyber-blue)** palette. It performs high-velocity, non-intrusive audits across **15 distinct security domains** by aggregating data from industry-leading security registries, passive certificate intelligence logs, and passive port registries—achieving zero-budget execution.
 
 ---
 
@@ -31,8 +31,8 @@ IPINFO_API_KEY=""
 ### 3. Local Installation
 ```bash
 # Clone the repository
-git clone https://github.com/webauditpro/webauditpro.git
-cd webauditpro
+git clone https://github.com/kunalshinde1214/SecureX.git
+cd SecureX
 
 # Install production-ready dependencies
 npm install
@@ -48,7 +48,7 @@ Open [http://localhost:3000](http://localhost:3000) to access the application.
 ---
 
 ## 🎨 Design Theme & Core Accents
-Following the **Cyber-Physical Security (Soft-Industrial)** design specifications, WebAudit Pro incorporates a sleek, compact, and high-contrast color scheme:
+Following the **Cyber-Physical Security (Soft-Industrial)** design specifications, Securex incorporates a sleek, compact, and high-contrast color scheme:
 *   **Background Base**: `#0A0A0A` (obsidian dark mode base)
 *   **Surface Containers**: `#131313` & `#1A1A1A` with `#2A2A2A` subtle borders.
 *   **Primary Accent**: `#00A3FF` (Cyber Blue)
